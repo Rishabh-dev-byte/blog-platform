@@ -5,7 +5,7 @@ function Logo({ width = 24, height = 24 }) {
     <svg
       width={width}
       height={height}
-      viewBox="0 0 24 24"
+      viewBox="0 0 35 35"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Blog Logo"
