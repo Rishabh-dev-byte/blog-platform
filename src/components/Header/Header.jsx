@@ -47,7 +47,7 @@ function Header() {
 
               </Link>
           </div>
-          <ul className='flex ml-auto overflow-hidden flex-wrap content-evenly'>
+          <ul className='flex flex-wrap content-end'>
             {navItems.map((item) => 
             item.active ? (
               <li key={item.name} className=''>
