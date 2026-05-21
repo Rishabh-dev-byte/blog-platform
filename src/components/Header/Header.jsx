@@ -47,7 +47,7 @@ function Header() {
 
               </Link>
           </div>
-          <ul className='flex flex-wrap content-end'>
+          <ul className='flex flex-wrap content-end justify-around'>
             {navItems.map((item) => 
             item.active ? (
               <li key={item.name} className=''>
