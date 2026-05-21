@@ -36,33 +36,43 @@ export default function Post() {
   };
 
   if (!post) {
-    return <div className="text-center py-10">Loading...</div>;
+    return (
+      <div className="text-center py-10 text-sm sm:text-base">
+        Loading...
+      </div>
+    );
   }
 
   return (
-    <div className="py-6 sm:py-8">
+    <div className="py-4 sm:py-6 md:py-10">
       <Container>
-        
-        {/* Image Section */}
+
+        {/* IMAGE SECTION */}
         <div className="w-full flex justify-center mb-4 sm:mb-6 relative border rounded-xl p-2">
           {post.featuredImage && (
             <img
               src={appwriteService.getFilePreview(post.featuredImage)}
               alt={post.title}
-              className="rounded-xl w-full max-h-[300px] sm:max-h-[400px] object-cover"
+              className="
+                rounded-xl 
+                w-full 
+                max-h-[200px] sm:max-h-[300px] md:max-h-[450px]
+                object-cover
+              "
             />
           )}
 
-          {/* Buttons */}
+          {/* BUTTONS */}
           {isAuthor && (
-            <div className="absolute right-2 top-2 sm:right-6 sm:top-6 flex gap-2">
+            <div className="absolute right-2 top-2 sm:right-4 sm:top-4 flex flex-col sm:flex-row gap-2">
               <Link to={`/edit-post/${post.$id}`}>
-                <Button className="bg-green-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2">
+                <Button className="bg-green-500 text-xs sm:text-sm md:text-base px-2 sm:px-4 py-1 sm:py-2">
                   Edit
                 </Button>
               </Link>
+
               <Button
-                className="bg-red-500 text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2"
+                className="bg-red-500 text-xs sm:text-sm md:text-base px-2 sm:px-4 py-1 sm:py-2"
                 onClick={deletePost}
               >
                 Delete
@@ -71,17 +81,18 @@ export default function Post() {
           )}
         </div>
 
-        {/* Title */}
-        <div className="w-full mb-4 sm:mb-6">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold break-words">
+        {/* TITLE */}
+        <div className="w-full mb-3 sm:mb-5 md:mb-6">
+          <h1 className="text-lg sm:text-xl md:text-3xl font-bold break-words leading-snug">
             {post.title}
           </h1>
         </div>
 
-        {/* Content */}
-        <div className="prose max-w-none text-sm sm:text-base leading-relaxed">
+        {/* CONTENT */}
+        <div className="prose max-w-none text-xs sm:text-sm md:text-base leading-relaxed overflow-x-auto">
           {parse(post.content)}
         </div>
+
       </Container>
     </div>
   );

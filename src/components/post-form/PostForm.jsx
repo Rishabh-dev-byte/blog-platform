@@ -25,31 +25,24 @@ export default function PostForm({ post }) {
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
 
-  // ✅ SUBMIT HANDLER
   const submit = async (data) => {
     try {
       if (post) {
-        // 🔁 UPDATE FLOW
         const file = data.image[0]
           ? await appwriteService.uploadFile(data.image[0])
           : null;
 
-        // delete old image if new uploaded
         if (file && post.featuredImage) {
           await appwriteService.deleteFile(post.featuredImage);
         }
 
         const dbPost = await appwriteService.updatePost(post.$id, {
           ...data,
-          // ✅ FIX: don’t overwrite with undefined
           featuredImage: file ? file.$id : post.featuredImage,
         });
 
-        if (dbPost) {
-          navigate(`/post/${dbPost.$id}`);
-        }
+        if (dbPost) navigate(`/post/${dbPost.$id}`);
       } else {
-        // ➕ CREATE FLOW
         let fileId = null;
 
         if (data.image && data.image[0]) {
@@ -59,20 +52,17 @@ export default function PostForm({ post }) {
 
         const dbPost = await appwriteService.createPost({
           ...data,
-          featuredImage: fileId, // ✅ always set
+          featuredImage: fileId,
           userId: userData.$id,
         });
 
-        if (dbPost) {
-          navigate(`/post/${dbPost.$id}`);
-        }
+        if (dbPost) navigate(`/post/${dbPost.$id}`);
       }
     } catch (error) {
       console.error("Error submitting post:", error);
     }
   };
 
-  // ✅ SLUG TRANSFORM
   const slugTransform = useCallback((value) => {
     if (value && typeof value === "string")
       return value
@@ -84,7 +74,6 @@ export default function PostForm({ post }) {
     return "";
   }, []);
 
-  // ✅ AUTO SLUG GENERATION
   useEffect(() => {
     const subscription = watch((value, { name }) => {
       if (name === "title") {
@@ -100,21 +89,23 @@ export default function PostForm({ post }) {
   return (
     <form
       onSubmit={handleSubmit(submit)}
-      className="flex flex-col md:flex-row gap-4 w-full"
+      className="
+        flex flex-col lg:flex-row
+        gap-6
+        w-full
+      "
     >
       {/* LEFT SECTION */}
-      <div className="w-full md:w-2/3">
+      <div className="w-full lg:w-2/3 space-y-4">
         <Input
           label="Title"
           placeholder="Enter title"
-          className="mb-4"
           {...register("title", { required: true })}
         />
 
         <Input
           label="Slug"
           placeholder="Slug"
-          className="mb-4"
           {...register("slug", { required: true })}
           onInput={(e) => {
             setValue("slug", slugTransform(e.currentTarget.value), {
@@ -123,46 +114,55 @@ export default function PostForm({ post }) {
           }}
         />
 
-        <RTE
-          label="Content"
-          name="content"
-          control={control}
-          defaultValue={getValues("content")}
-        />
+        <div className="w-full overflow-hidden">
+          <RTE
+            label="Content"
+            name="content"
+            control={control}
+            defaultValue={getValues("content")}
+          />
+        </div>
       </div>
 
       {/* RIGHT SECTION */}
-      <div className="w-full md:w-1/3 flex flex-col">
+      <div className="w-full lg:w-1/3 flex flex-col gap-4">
+
+        {/* IMAGE UPLOAD */}
         <Input
           label="Featured Image"
           type="file"
-          className="mb-4"
           accept="image/png, image/jpg, image/jpeg, image/gif"
           {...register("image", { required: !post })}
         />
 
-        {/* ✅ Preview existing image */}
+        {/* IMAGE PREVIEW */}
         {post?.featuredImage && (
-          <div className="w-full mb-4">
+          <div className="w-full">
             <img
               src={appwriteService.getFilePreview(post.featuredImage)}
               alt={post.title}
-              className="rounded-lg w-full max-h-[200px] object-cover"
+              className="
+                w-full
+                h-40 sm:h-48 lg:h-56
+                object-cover
+                rounded-lg
+              "
             />
           </div>
         )}
 
+        {/* STATUS */}
         <Select
           options={["active", "inactive"]}
           label="Status"
-          className="mb-4"
           {...register("status", { required: true })}
         />
 
+        {/* BUTTON */}
         <Button
           type="submit"
           bgColor={post ? "bg-green-500" : "bg-blue-500"}
-          className="w-full"
+          className="w-full py-2 text-sm sm:text-base"
         >
           {post ? "Update" : "Submit"}
         </Button>

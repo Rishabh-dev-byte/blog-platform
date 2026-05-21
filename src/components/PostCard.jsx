@@ -10,6 +10,8 @@ function PostCard({ $id, title, featuredImage }) {
         {/* Image */}
         <div className="w-full mb-3 sm:mb-4 overflow-hidden rounded-xl">
           {featuredImage && (
+            console.log(appwriteService.getFilePreview(featuredImage)),
+            console.log(appwriteService.getFilePreview(featuredImage)),
             <img
               src={appwriteService.getFilePreview(featuredImage)}
               alt={title}
